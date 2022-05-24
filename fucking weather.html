@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>What the fuck is with this weather...</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="src/style.css" />
+    <script src="src/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://kit.fontawesome.com/5b4e8e4f00.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  </head>
+  
+  <style>
+    body {
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 30px;  
+      background-color: grey;
+      border: 1px solid linear-gradient(to right, #e4afcb 0%, #b8cbb8 0%, #b8cbb8 0%, #e2c58b 30%, #c2ce9c 64%, #7edbdc 100%); 
+    }
+    
+
+    .row {
+        margin-bottom: 30px;
+    }
+
+    .col {
+        padding-left: 100px;
+        margin-top: 10px;
+    }
+
+    .col2 {
+    width: 500px;
+    height: 350px;
+    padding-left: 50px;
+    margin-top: -310px;
+    margin-left: 550px;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+
+    .forecastContent {
+ padding: 25px 
+ 
+}
+
+.placeDate {
+  margin-top: 25px;
+  
+}
+
+.weatherBox {
+  margin-bottom: 15px;
+  margin-top: 25px;
+  font-size: 45px;
+}
+
+
+
+.conditions {
+  list-style-type: none;
+  font-size: 20px;
+  margin-left: -20px;
+}
+
+.searchCity {
+  font-size: 15px;
+  width: 270px;
+  border-radius: 5px;
+  border: 3px solid #FFFCDC;
+}
+
+.button1 {
+  margin-top: 20px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: solid 1px ;
+  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
+  border: 3px solid #FFFCDC;
+  transition: all 200px ease-in-out;
+  cursor: pointer;
+  box-shadow: 4px 8px 8px rgba(185, 181, 247, 0.3);
+  font-weight: 600;
+}
+.button1:hover {
+background: #FFFCDC;
+color: #8B3277;
+font-weight: 700;
+}
+
+
+
+.signature {
+  font-size: 10px;
+  text-align: center;
+  margin-top: -20px;
+}
+
+.linkedin {
+  color:hotpink;
+  
+}
+
+.linkedin:hover {
+  color: rgb(59, 56, 56);
+}
+
+
+
+.advice {
+    color: #E397AC;
+    font-size: 45px;
+}
+
+   
+</style>
+<body>
+    <section>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <form id="search-form">
+                    <input type="text" class="searchCity" placeholder="What's the weather in your city?" 
+                    class="city-search" id="search-text-input" 
+                    autofocus="on"
+                    autocomplete="off"
+                    aria-describedby="CityWeather"></input>
+        
+                    <span><input type="submit" class="button1" value="Search" id="search-location"/></span>
+                </form>    
+
+
+                <div class="placeDate">
+                    <h1 id="cityNow"></h1> 
+                    <h5></h5>
+                </div>  
+                    
+                <div class="weatherBox">
+                   <span id="celsius">🌞🌈☔⛄💧❄</span>°C
+                   <ul class="conditions">
+                   <li id="description">General Conditions</li>
+                   <li id="humidity">Humidity  </li> 
+                   <li id="wind"> Wind </li> 
+                  </ul>
+                </div>
+
+                <div class="col2">
+                    <p class="advice" id="advice-text"></p>
+                </div>
+                
+            </div>       
+          
+          
+
+          
+        </div> 
+    </div>
+
+    </section>
+    
+    <div class="signature">Coded by <strong><a class="linkedin" target="_blank" href="https://www.linkedin.com/in/weronika-winkler-837640112/">Weronika Winkler</a></strong></div>
+  </body>
+
+<script>
+
+//date
+let now = new Date();
+
+let h5 = document.querySelector("h5");
+
+let date = now.getDate();
+let hours = now.getHours();
+let minutes = now.getMinutes();
+let year = now.getFullYear();
+
+let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+let day = days[now.getDay()];
+
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let month = months[now.getMonth()];
+
+
+h5.innerHTML = `${day}, ${date} ${month} ${year}`;
+
+
+
+//API weather
+
+function showWeather(response) {
+
+let findCities= document.querySelector("#cityNow");
+findCities.innerHTML = response.data.name;
+
+
+let temperature = Math.ceil(response.data.main.temp);
+
+
+if (temperature <= 0) {
+let funnyElement1 = document.querySelector("#advice-text");
+funnyElement1.innerHTML = ("It's gonna be fucking freezing, better stay home");
+} else {
+
+if (temperature  <= 12) {
+let funnyElement2 = document.querySelector("#advice-text");
+funnyElement2.innerHTML = ("This is fucked up, too cold to get out, still too warm to find excuses");
+} else {
+
+if (temperature <= 18) {
+let funnyElement3 = document.querySelector("#advice-text");
+funnyElement3.innerHTML = ("Get your fucking coat and you're going to be alright");
+} else {
+
+
+if (temperature <= 26) {
+let funnyElement4 = document.querySelector("#advice-text");
+funnyElement4.innerHTML = ("Don't know about you, but for me this weater is fucking perfect");
+} else {
+
+if (temperature < 33) {
+let funnyElement5 = document.querySelector("#advice-text");
+funnyElement5.innerHTML = ("You'd better prepare fucking sunglasses and some suncream");
+} else {
+
+if (temperature >= 33) {
+let funnyElement6 = document.querySelector("#advice-text");
+funnyElement6.innerHTML = ("It's fucking H E L L outside, you will fry like a chicken.");
+} }}}}}
+
+weatherElement1 = document.querySelector("#celsius");
+weatherElement1.innerHTML = temperature;
+
+let specification = response.data.weather[0].main;
+weatherElement2 = document.querySelector("#description");
+weatherElement2.innerHTML = specification;
+
+if (specification === "Rain") {
+    let funnyElement7 = document.querySelector("#advice-text");
+    funnyElement7.innerHTML = ("You're gonna literally singing in the rain so better have fucking umbrella");    
+}
+
+
+
+let humid =  Math.ceil(response.data.main.humidity);
+weatherElement3 = document.querySelector("#humidity");
+weatherElement3.innerHTML = `Humidity: ${humid}%`;
+
+let windy = Math.ceil(response.data.wind.speed);
+weatherElement4 = document.querySelector("#wind");
+weatherElement4.innerHTML = `Wind: ${windy} km/h`;
+
+}
+
+
+function findCity(city) {
+let apiKey = "93fd6b5a846a988fc71bbe304715eb3c";
+let searchLocation = document.querySelector("#search-text-input").value;
+let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchLocation}&appid=${apiKey}&units=metric`;
+axios.get(apiUrl).then(showWeather);
+}
+
+
+function newCity(event) {
+event.preventDefault();
+let city = document.querySelector("#search-text-input").value;
+findCity(city);}
+
+
+let chooseCity = document.querySelector("form");
+chooseCity.addEventListener("submit", newCity);
+
+
+</script>
+ 
+</html>
